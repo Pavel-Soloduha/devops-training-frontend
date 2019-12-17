@@ -1,0 +1,11 @@
+# docker build . -f Dockerfile-node.build --rm -t docker-node-agent:1.0.0
+FROM node:12.13.1-stretch
+
+RUN apt update \
+    && apt install python3-pip -y \
+    && pip3 install awscli --upgrade --user \
+    && apt-get clean --dry-run
+
+ENV PATH=$PATH:/root/.local/bin
+ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+ENV PATH=$PATH:$JAVA_HOME/bin

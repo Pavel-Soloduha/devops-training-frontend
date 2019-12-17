@@ -1,0 +1,44 @@
+pipeline {
+
+    agent {
+        docker {
+            image "docker-node-agent:1.0.0"
+        }
+    }
+
+    stages {
+        stage('Compile project') {
+            steps {
+                sh "npm install"
+            }
+        }
+
+        stage('Build project') {
+            steps {
+                sh "npm run-script build"
+            }
+        }
+
+        stage('Push to Nexus') {
+            steps {
+                script {
+                    sh "tar -czf frontend-${BUILD_NUMBER}.tar.gz ./build"
+                    def artifact_name = "frontend-${BUILD_NUMBER}"
+                    nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', classifier: 'zip', file: "${artifact_name}.tar.gz", type: 'zip']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
+                }
+            }
+        }
+
+        stage('Deploy to server') {
+            steps {
+                script {
+                    def environment = "dev"
+                    if ("${BUILD_BRANCH}" == "master") {
+                        environment = "prod"
+                    }
+                    sh "echo $environment"
+                }
+            }
+        }
+    }
+}
