@@ -40,6 +40,15 @@ pipeline {
             steps {
 
                 // inject proper backend url
+                dir("src") {
+                    withCredentials([string(credentialsId: "backend-url-${CHOSEN_ENV}", variable: 'backend_url')]) {
+                        // some block
+                        sh "cat agent.js | head -n 5 > new-agent.js"
+                        sh "printf \"const API_ROOT = \'${backend_url}\';\"   >> new-agent.js"
+                        sh "cat agent.js | tail -n 90 >> new-agent.js"
+                        sh "mv new-agent.js agent.js"
+                    }
+                }
 
                 sh "npm install"
             }
