@@ -55,6 +55,7 @@ pipeline {
                 script {
                     sh "tar -czf frontend-${BUILD_NUMBER}.tar.gz ./build"
                     def artifact_name = "frontend-${BUILD_NUMBER}"
+                    println chosen_env
                     nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', classifier: "${chosen_env}", file: "${artifact_name}.tar.gz", type: 'tar.gz']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
                 }
             }
