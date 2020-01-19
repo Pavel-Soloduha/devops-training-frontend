@@ -29,9 +29,9 @@ pipeline {
                     def chosen_branch = userInput["Branch name"]
                     print userInput["Environment variable"]
                     def chosen_env = userInput["Environment variable"]
+                    CHOSEN_ENV = chosen_env
 
                     sh "git checkout $chosen_branch"
-                    CHOSEN_ENV = chosen_env
                 }
             }
         }
@@ -56,10 +56,8 @@ pipeline {
                 script {
                     sh "tar -czf frontend-${BUILD_NUMBER}.tar.gz ./build"
                     def artifact_name = "frontend-${BUILD_NUMBER}"
-                    print chosen_env
                     print "${CHOSEN_ENV}"
-                    print userInput["Environment variable"]
-                    nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', classifier: chosen_env, file: "${artifact_name}.tar.gz", type: 'tar.gz']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
+                    nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', classifier: "${CHOSEN_ENV}", file: "${artifact_name}.tar.gz", type: 'tar.gz']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
                 }
             }
         }
