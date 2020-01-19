@@ -37,6 +37,9 @@ pipeline {
 
         stage('Compile project') {
             steps {
+
+                // inject proper backend url
+
                 sh "npm install"
             }
         }
@@ -52,7 +55,7 @@ pipeline {
                 script {
                     sh "tar -czf frontend-${BUILD_NUMBER}.tar.gz ./build"
                     def artifact_name = "frontend-${BUILD_NUMBER}"
-                    nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', classifier: 'zip', file: "${artifact_name}.tar.gz", type: 'zip']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
+                    nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', file: "${artifact_name}.tar.gz", type: 'zip']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
                 }
             }
         }
