@@ -58,6 +58,7 @@ pipeline {
                     def artifact_name = "frontend-${BUILD_NUMBER}"
                     print chosen_env
                     print "${CHOSEN_ENV}"
+                    print userInput["Environment variable"]
                     nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', classifier: chosen_env, file: "${artifact_name}.tar.gz", type: 'tar.gz']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
                 }
             }
