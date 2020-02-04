@@ -22,9 +22,9 @@ pipeline {
         stage('Push to Nexus') {
             steps {
                 script {
-                    sh "tar -czf frontend-${BUILD_NUMBER}.tar.gz ./build"
+                    sh "tar -cf frontend-${BUILD_NUMBER}.tar ./build"
                     def artifact_name = "frontend-${BUILD_NUMBER}"
-                    nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', file: "${artifact_name}.zip", type: 'zip']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
+                    nexusArtifactUploader artifacts: [[artifactId: 'devops-training-frontend', file: "${artifact_name}.tar", type: 'tar']], credentialsId: 'nexus_cred', groupId: 'by.brest.project', nexusUrl: 'nexus-solodukha.test.coherentprojects.net/', nexusVersion: 'nexus3', protocol: 'https', repository: 'training', version: "${BUILD_NUMBER}"
                 }
             }
         }
